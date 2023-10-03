@@ -41,6 +41,7 @@ from employee;
 SELECT COUNT(JOININGYEAR) FROM employee;
 SELECT AVG (Age) FROM employee;
 SELECT SUM(PaymentTier) FROM employee;
+SELECT COUNT(*) FROM employee; 
 /* LIKE*/
 SELECT * FROM employee WHERE City LIKE "P%";
 SELECT * FROM employee WHERE City LIKE "%i";
@@ -83,12 +84,97 @@ RENAME TABLE student_information TO student_in4;
 2. Numeric functions- operate on numeric data types
 3. Date functions- operate on date data types
 4. Aggregate functions- operate on all of the data types and produce summarized result sets. */
+
 /* String functions: Upper, lower, length, trim, NSTR*/
+
 SELECT UPPER(City) from employee; -- Converts into upper case letters
 Select LOWER(City) from employee; -- Converts into lower case letters
 Select LENGTH('WELCOME'); -- Return the length of string
 SELECT LENGTH(City) from employee;
+
 -- Print Names of employees whose name has 4 characters
+
 SELECT City from employee where LENGTH(City)=4;
 SELECT TRIM('z' from "zzoraclezzz"); -- Removes the specified characters from both sides. 
 SELECT INSTR("WELCOME", "E"); -- Returns te position of the character within a string
+SELECT SUBSTR("WELCOME", 2,3); -- 2 number starts to count, 3- the quantity of number, start in E, 3 letters from that ELC
+SELECT SUBSTRING("WELCOME", 4,2);
+SELECT SUBSTRING(City, 2,3) from employee;
+-- CONCAT: 
+SELECT CONCAT("AMERICA", "AUSTRALIA"); -- CONNECT 2 WORDS
+SELECT * FROM employee;
+SELECT CONCAT(Education, JoiningYear) Graduation from employee; -- combine 2 columns information
+/* Numeric Functions: ABS, SORT, MOD, power, truncate
+Truncate() function truncates a number to the specified number of decimal places*/
+SELECT ABS(-40);
+SELECT ABS(40);
+
+SELECT SQRT(25);
+SELECT MOD(10,3);
+SELECT power(2,5);
+
+-- TRUNCATE FUNCTION: 
+SELECT TRUNCATE(40.1234, 3); -- 3 VALUES AFTER THE DECIMAL
+SELECT TRUNCATE(6876, -1); -- THE LAST DIGIT WILL CONVERT TO 0 
+SELECT TRUNCATE(6876, -2); -- THE LAST TWO DIGIT WILL BECOME ZERO 
+
+-- GREATEST() AND LEAST(): returns greatest, least values in the provided values
+SELECT GREATEST(100, 200, 300, 400, 500);
+
+/* DATE FUNCTIONS:
+CURDATE()/ CURRENT_DATE(): function returns the current date
+CURTIME()/ CURRENT_TIME(): fucntion returns the current time
+NOW(): function returns the current date and time
+SYSDATE(): function returns the current date and time. 
+MONTH(): funtion return th month part for a given date(a number from 1 to 12)
+YEAR(): fuunction returns the year part for a given date( from 1000 to 9999) 
+DAY(): functions retruns the day of the month for a given date (from 1 to 31)*/
+
+SELECT CURRENT_DATE(); 
+SELECT CURRENT_TIME(); 
+SELECT NOW();
+SELECT SYSDATE(); -- THE SAME NOW()
+SELECT MONTH("2022-05-19");
+SELECT YEAR("2022-05-19");
+
+-- Queries on Date functions: 
+Use company;
+select * from employee;
+-- DISPLAYS EMPLOYEES WHO ARE JOINED IN 2015: 
+SELECT * FROM employee where YEAR(JoiningYear)= "2014"; 
+SHOW COLUMNS FROM employee; -- check the data type. 
+ALTER TABLE employee MODIFY COLUMN JoiningYear int;
+-- MONTHNAME() ="JUNE"
+
+/* GROUPBY:
+- The GROUPBY clause groups records into summary rows
+- Returns one records for each group
+- Typically also involves aggregates: COUNT, MAX, SUM, AVG,etc.
+- Can group by one or more columns*/
+
+SELECT PaymentTier,SUM(ExperienceInCurrentDomain) FROM employee group by PaymentTier;
+-- Check the average age based on experience current domain
+SELECT ExperienceInCurrentDomain, AVG(Age)  from employee group by ExperienceInCurrentDomain;
+SELECT ExperienceInCurrentDomain, MAX(Age) from employee group by ExperienceInCurrentDomain; -- MAX AGE
+-- HOW MANY PEOPLE IN EACH PAYMENTTIER: 
+SELECT PaymentTier, COUNT(*) FROM employee group by PaymentTier;
+SELECT * FROM employee; 
+SELECT ExperienceInCurrentDomain,Education, COUNT(*) FROM employee group by ExperienceInCurrentDomain; -- incompatible
+-- HAVING: GROUPBY(GROUPBY)
+SELECT ExperienceInCurrentDomain,Education, COUNT(*) FROM employee group by ExperienceInCurrentDomain having count(*)>3; -- just model not run in this data!!!
+-- ORDER OF EXECUTION: 
+/* Where----> Group by ---> Having---> Order by
+SELECT column-names
+FROM table-name
+  WHERE condition
+    GROUP BY column-names
+      HAVING condition
+        ORDER BY column-names      */
+
+SELECT PaymentTier,SUM(ExperienceInCurrentDomain) FROM employee 
+where PaymentTier<>60 
+group by PaymentTier 
+having SUM(ExperienceInCurrentDomain)> 400 
+order by SUM(ExperienceInCurrentDomain) DESC;
+
+SELECT * FROM employee order by Age ASC;
