@@ -329,4 +329,70 @@ SELECT SupplierName
 FROM Suppliers
 WHERE EXISTS (SELECT ProductName FROM Products WHERE Products.SupplierID = Suppliers.supplierID AND Price < 20);
 
+/* THE ANY OPERATOR: 
+SELECT column_name(s)
+FROM table_name
+WHERE column_name operator ANY
+  (SELECT column_name
+  FROM table_name
+  WHERE condition);*/
+select * from orderdetails;
+select * from products; 
+/* Finds any records in the OrderDetails table that Quantity = 10.*/
+select ProductName 
+from products where ProductID= ANY( select ProductID from orderdetails where Quantity =10);
 
+select ProductName 
+from products where ProductID= ALL( select ProductID from orderdetails where Quantity =10);
+
+select all ProductName from products where TRUE; 
+
+/* Find the name of the product if all the records in the OrderDetails has Quantity either equal to 6 or 2.*/
+SELECT ProductName 
+FROM products
+WHERE ProductID = ALL (SELECT ProductId
+                       FROM orderdetails
+                       WHERE Quantity = 6 OR Quantity = 2);
+                       
+/*Find the OrderID whose maximum Quantity among all product of that OrderID is greater than average quantity of all OrderID.*/
+SELECT OrderID 
+FROM OrderDetails 
+GROUP BY OrderID 
+HAVING max(Quantity) > ALL (SELECT avg(Quantity) 
+                            FROM OrderDetails 
+                            GROUP BY OrderID);
+
+/* CASE SYNTAX: 
+CASE
+    WHEN condition1 THEN result1
+    WHEN condition2 THEN result2
+    WHEN conditionN THEN resultN
+    ELSE result
+END; */
+
+select * from orderdetails;
+
+select OrderID, Quantity,
+CASE
+    WHEN Quantity> 30 THEN " The Quantity is greater than 30"
+    WHEN Quantity= 30 THEN "The quantity is equal to 30"
+    ELSE "The quantity is under 30"
+END AS Quantity_Text
+from orderdetails;
+/* The following SQL will order the customers by City. However, if City is NULL, then order by Country:*/
+select CustomerName, City, Country,
+CASE
+   WHEN City is NULL THEN Country
+   ELSE City
+END Orginality
+from customers;
+/* IF NULL Function: 
+The MySQL IFNULL() function lets you return an alternative value if an expression is NULL.
+SELECT ProductName, UnitPrice * (UnitsInStock + IFNULL(UnitsOnOrder, 0))
+FROM Products;
+
+
+COALESCE function: 
+SELECT ProductName, UnitPrice * (UnitsInStock + COALESCE(UnitsOnOrder, 0))
+FROM Products; */
+-- Single line comment
