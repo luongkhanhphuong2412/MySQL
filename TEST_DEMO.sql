@@ -286,5 +286,47 @@ UNION
 SELECT CustomerID from orders;
 
 /* UNION ALL: ALLOW DUPLICATE VALUES*/
+select CustomerID from customers
+UNION ALL
+SELECT CustomerID from orders
+ORDER BY CustomerID DESC;
+
+/* GROUP BY: */
+SELECT * FROM customers;
+select count( "CustomerID") from customers
+group by country;
+
+/* Group by with JOIN example: */
+select shippers.ShipperName, COUNT(orders.OrderID) AS number_of_orders from orders
+inner join shippers on shippers.ShipperID = orders.ShipperID
+group by ShipperName
+order by ShipperName;
+
+/* Having Syntax:
+SELECT column_name(s)
+FROM table_name
+WHERE condition
+GROUP BY column_name(s)
+HAVING condition
+ORDER BY column_name(s);*/
+
+/* EXIST Syntax: 
+SELECT column_name(s)
+FROM table_name
+WHERE EXISTS
+(SELECT column_name FROM table_name WHERE condition);*/
+
+SELECT ShipperID
+FROM orders
+WHERE EXISTS (SELECT CustomerName FROM customers WHERE customers.CustomerID = orders.CustomerID);
+
+/* SELECT SupplierName
+FROM Suppliers
+WHERE EXISTS (SELECT ProductName FROM Products WHERE Products.SupplierID = Suppliers.supplierID AND Price < 20);*/
+
+use northwind;
+SELECT SupplierName
+FROM Suppliers
+WHERE EXISTS (SELECT ProductName FROM Products WHERE Products.SupplierID = Suppliers.supplierID AND Price < 20);
 
 
