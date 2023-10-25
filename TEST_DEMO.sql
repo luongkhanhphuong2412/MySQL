@@ -396,3 +396,11 @@ COALESCE function:
 SELECT ProductName, UnitPrice * (UnitsInStock + COALESCE(UnitsOnOrder, 0))
 FROM Products; */
 -- Single line comment
+
+-- MySQL CONSTRAINT: 
+-- NOT NULL constraint:
+use company;
+select * from customers;
+ALTER table customers
+modify CustomerID int not null;
+
