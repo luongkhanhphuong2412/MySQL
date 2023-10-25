@@ -178,3 +178,113 @@ having SUM(ExperienceInCurrentDomain)> 400
 order by SUM(ExperienceInCurrentDomain) DESC;
 
 SELECT * FROM employee order by Age ASC;
+
+
+-- JOIN TABLE: 
+USE COMPANY;
+CREATE TABLE ORDERS(OrderID INT(20),CustomerID INT(20),	EmployeeID INT(20),	OrderDate DATETIME,	ShipperID INT(80));
+CREATE TABLE CUSTOMERS(CustomerID INT(20),CustomerName VARCHAR(40),	ContactName VARCHAR(40),Address VARCHAR(50),City VARCHAR(40),PostalCode INT(50),Country VARCHAR(20));
+
+INSERT INTO ORDERS VALUES(10308,2,7,'1996-09-18',3);
+INSERT INTO ORDERS VALUES(10309,	37,3, "1996-09-19",	1);
+INSERT INTO ORDERS VALUES(10310,	77,	8	,"1996-09-20",	2);
+UPDATE ORDERS
+SET OrderID =10310
+where OrderDate ="1996-09-20";
+DELETE FROM ORDERS WHERE OrderDate='1996-09-18 02:53:50';
+SELECT * FROM ORDERS;
+
+INSERT INTO CUSTOMERS VALUES(1, "Alfreds Futterkiste",	"Maria Anders",	"Obere Str. 57",	"Berlin",	12209,	"Germany");
+INSERT INTO CUSTOMERS VALUES(2, "Ana Trujillo Emparedados y helados", "Ana Trujillo",	"Avda. de la Constitución 2222",	"México D.F.",	05021, "Mexico");
+INSERT INTO CUSTOMERS VALUES(3, "Antonio Moreno Taquería","	Antonio Moreno", "	Mataderos 2312", "	México D.F.",	05023,"	Mexico");
+use company;
+SELECT * FROM CUSTOMERS;
+SELECT * FROM ORDERS;
+
+-- INNER JOIN: 
+/* SELECT column_name(s)
+FROM table1
+INNER JOIN table2
+ON table1.column_name = table2.column_name;*/
+
+SELECT ORDERS.OrderID, CUSTOMERS.CustomerName
+FROM ORDERS
+INNER JOIN CUSTOMERS ON ORDERS.CustomerID = CUSTOMERS.CustomerID;
+
+/* HOW TO JOIN 3 TABLES:
+SELECT Orders.OrderID, Customers.CustomerName, Shippers.ShipperName
+FROM ((Orders
+INNER JOIN Customers ON Orders.CustomerID = Customers.CustomerID)
+INNER JOIN Shippers ON Orders.ShipperID = Shippers.ShipperID); */
+
+CREATE TABLE Shippers(ShipperID INT(20), ShipperName VARCHAR(40), Phone INT(255));
+Drop table Shippers; /* 
+INSERT INTO Shippers VALUES(1, "Speedy Express"	, 50355591);
+INSERT INTO Shippers VALUES(2, "United Package", 50355531);
+INSERT INTO Shippers VALUES(3,	"Federal Shipping", 50359931);
+select * from Shippers;
+
+/* JOIN 3 TABLES TOGETHER: */
+SELECT orders.OrderID, customers.CustomerName, shippers.Shippername
+FROM ((orders
+INNER JOIN customers ON orders.CustomerID= customers.CustomerID)
+INNER JOIN shippers ON orders.ShipperID= shippers.ShipperID);
+
+/* LEFT JOIN SYNTAX: 
+SELECT column_name(s)
+FROM table1
+LEFT JOIN table2
+ON table1.column_name = table2.column_name;*/
+
+SELECT customers.CustomerName, orders. OrderID
+FROM customers
+LEFT JOIN orders
+ON customers.CustomerID = orders.CustomerID
+ORDER BY customers.CustomerName;
+
+select * from orders;
+
+/* RIGHT JOIN SYNTAX:
+SELECT Orders.OrderID, Employees.LastName, Employees.FirstName
+FROM Orders
+RIGHT JOIN Employees ON Orders.EmployeeID = Employees.EmployeeID
+ORDER BY Orders.OrderID; */
+USE company;
+/* CROSS JOIN SYNTAX: 
+SELECT column_name(s)
+FROM table1
+CROSS JOIN table2;*/
+
+SELECT customers.CustomerName, orders. OrderID
+FROM customers
+cross join orders
+where customers.CustomerID= orders.OrderID
+order by CustomerName; 
+/* If you add a WHERE clause (if table1 and table2 has a relationship),
+ the CROSS JOIN will produce the same result as the INNER JOIN clause*/
+ 
+ /* SELF JOIN SYNTAX: 
+SELECT column_name(s)
+FROM table1 T1, table1 T2
+WHERE condition;
+
+
+Example: 
+SELECT A.CustomerName AS CustomerName1, B.CustomerName AS CustomerName2, A.City
+FROM Customers A, Customers B
+WHERE A.CustomerID <> B.CustomerID
+AND A.City = B.City
+ORDER BY A.City; */
+
+/* UNION OPERATOR: is used to combine the result-set of two or more SELECT statements
+SELECT column_name(s) FROM table1
+UNION
+SELECT column_name(s) FROM table2; */
+
+SELECT CustomerID from customers
+UNION
+SELECT CustomerID from orders;
+
+/* UNION ALL: ALLOW DUPLICATE VALUES*/
+
+
