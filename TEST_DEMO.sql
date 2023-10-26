@@ -404,3 +404,60 @@ select * from customers;
 ALTER table customers
 modify CustomerID int not null;
 
+-- UNIQUE CONSTRAINT: 
+CREATE TABLE PERSONS( 
+   ID INT NOT NULL,
+   Last_name VARCHAR(255) not null,
+   First_name VARCHAR(255),
+   Age int, 
+   UNIQUE(ID));
+   
+-- Define a UNIQUE constraint on multiple columns, use the following SQL syntax:
+CREATE TABLE PEOPLE( 
+   ID INT NOT NULL,
+   Last_name VARCHAR(255) not null,
+   First_name VARCHAR(255),
+   Age int, 
+   CONSTRAINT Person_infor UNIQUE(ID, Last_name));
+
+-- UNIQUE Constraint on ALTER TABLE: 
+ALTER TABLE PERSONS
+ADD UNIQUE( First_name) ;
+
+-- DELETE UNIQUE CONSTRAINT: 
+ALTER TABLE PERSONS
+DROP INDEX First_name; 
+/* PRIMARY CONSTRAINT: 
+CREATE TABLE Persons (
+    ID int NOT NULL,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int,
+    PRIMARY KEY (ID)
+);
+
+CREATE TABLE Persons (
+    ID int NOT NULL,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int,
+    CONSTRAINT PK_Person PRIMARY KEY (ID,LastName)
+);
+
+Note: In the example above there is only ONE PRIMARY KEY (PK_Person). 
+However, the VALUE of the primary key is made up of TWO COLUMNS (ID + LastName).
+*/
+-- ADD PRIMARY KEY: 
+SELECT * FROM customers;
+ALTER TABLE customers
+ADD PRIMARY KEY (CustomerID);
+
+/* ALTER TABLE customers
+ADD CONSTRAINT Customers_key PRIMARY KEY(ContactName,Address); */
+
+alter table customers
+drop primary key;
+
+
+
+
