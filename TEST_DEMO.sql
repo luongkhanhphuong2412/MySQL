@@ -218,7 +218,7 @@ INNER JOIN Customers ON Orders.CustomerID = Customers.CustomerID)
 INNER JOIN Shippers ON Orders.ShipperID = Shippers.ShipperID); */
 
 CREATE TABLE Shippers(ShipperID INT(20), ShipperName VARCHAR(40), Phone INT(255));
-Drop table Shippers; /* 
+Drop table Shippers;  
 INSERT INTO Shippers VALUES(1, "Speedy Express"	, 50355591);
 INSERT INTO Shippers VALUES(2, "United Package", 50355531);
 INSERT INTO Shippers VALUES(3,	"Federal Shipping", 50359931);
@@ -458,6 +458,142 @@ ADD CONSTRAINT Customers_key PRIMARY KEY(ContactName,Address); */
 alter table customers
 drop primary key;
 
+-- FOREIGN KEY: 
+use company;
+CREATE TABLE STUDENT(
+  STUDENT_ID INT NOT NULL,
+  STUDENT_NAME VARCHAR(255),
+  MAJOR VARCHAR(255),
+  CustomerID int,
+  PRIMARY KEY (STUDENT_ID),
+  FOREIGN KEY (CustomerID) REFERENCES customers(CustomerID)
+  );
+  
+/* To allow naming of a FOREIGN KEY constraint, 
+and for defining a FOREIGN KEY constraint on multiple columns, use the following SQL syntax:
+CREATE TABLE Orders (
+    OrderID int NOT NULL,
+    OrderNumber int NOT NULL,
+    PersonID int,
+    PRIMARY KEY (OrderID),
+    CONSTRAINT FK_PersonOrder FOREIGN KEY (PersonID)
+    REFERENCES Persons(PersonID)
+);  */
+
+ALTER TABLE orders
+ADD FOREIGN KEY( ShipperID) references shippers( ShipperID);
 
 
 
+delete from shippers where ShipperID = NULL;
+delete from shippers where ShipperName = NULL;
+delete from shippers where Phone = NULL;
+delete from shippers;
+
+
+select * from shippers;
+select * from orders;
+
+drop table shippers;
+
+/* When creating foreign keys be sure the columns you are using have the same:
+
+Data Type
+Collation
+Zero Fill
+Not Null
+Unsigned
+Binary  */
+
+
+ALTER TABLE orders DROP COLUMN ShipperID;
+ALTER TABLE orders ADD COLUMN ShipperID int not null;
+
+SHOW FULL COLUMNS FROM orders;
+SHOW FULL COLUMNS FROM shippers;
+
+ALTER TABLE shippers
+add primary key(Phone);
+
+alter table orders
+add primary key (OrderID);
+
+
+-- CHECK CONSTRAINT: 
+/* CREATE TABLE Persons (
+    ID int NOT NULL,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int,
+    CHECK (Age>=18)
+);*/
+alter table people
+add check (Age>=18);
+
+select * from people;
+insert into people values(22070782, "Phuong", "Khanh", 19);
+insert into people values(22070782, "Dat", "Phan", 13);  -- ADD CHECK=> INSERT ERROR
+
+/* DEFAULT CONSTRAINT: 
+The DEFAULT constraint is used to set a default value for a column.
+
+The default value will be added to all new records, if no other value is specified. */
+
+CREATE TABLE information (
+    ID int NOT NULL,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int,
+    City varchar(255) DEFAULT 'Sandnes'
+);
+
+/*CREATE TABLE Products(
+    ID int NOT NULL,
+    OrderNumber int NOT NULL,
+    OrderDate date DEFAULT CURRENT_DATE()
+);  */
+
+ALTER TABLE  information
+ALTER City SET DEFAULT "Hanoi";
+
+ALTER TABLE  information
+ALTER City DROP DEFAULT;
+
+/* CREATE INDEX Statement: 
+The CREATE INDEX statement is used to create indexes in tables.
+
+Indexes are used to retrieve data from the database more quickly than otherwise. 
+The users cannot see the indexes, they are just used to speed up searches/queries. */
+
+CREATE INDEX idx_lastname
+ON people(Last_Name);
+
+ALTER TABLE people
+DROP INDEX idx_lastname;
+
+/* AUTO INCREMENT Field
+Auto-increment allows a unique number to be generated automatically when a new record is inserted into a table.
+
+Often this is the primary key field that we would like to be created automatically every time a new record is inserted.*/
+
+CREATE TABLE PARTICIPANTS (
+PERSONAL_ID INT NOT NULL AUTO_INCREMENT,  -- When we insert a new record into the "Persons" table, we do NOT have to specify a value for the "Personid" column (a unique value will be added automatically):
+NAME_OF_PARTICIPANTS VARCHAR(255) NOT NULL,
+AGE INT,
+PRIMARY KEY (PERSONAL_ID));
+
+ALTER TABLE PARTICIPANTS AUTO_INCREMENT = 100;  -- START WITH ANOTHER VALUE
+
+INSERT INTO PARTICIPANTS VALUES(1, "PHUONG", 18);
+INSERT INTO PARTICIPANTS (NAME_OF_PARTICIPANTS, AGE) VALUES("AN", 20);
+SELECT * FROM PARTICIPANTS;
+/* CREATE VIEW Statement: a view is a virtual table based on the result-set of an SQL statement.
+CREATE VIEW view_name AS
+SELECT column1, column2, ...
+FROM table_name
+WHERE condition;*/
+CREATE VIEW PARTICIPANTS_TABLE AS 
+SELECT * FROM PARTICIPANTS;
+SELECT * FROM PARTICIPANTS_TABLE;
+
+DROP VIEW PARTICIPANTS_TABLE;
